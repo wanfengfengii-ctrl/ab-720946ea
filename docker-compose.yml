@@ -1,0 +1,58 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    image: insulation-diagnostic-backend:latest
+    container_name: insulation-backend
+    ports:
+      # 宿主机端口可通过环境变量 BACKEND_PORT 配置
+      - "${BACKEND_PORT:-8000}:8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import json,urllib.request,sys; r=urllib.request.urlopen('http://localhost:8000/api/health',timeout=3); sys.exit(0 if r.status==200 and json.load(r)['status']=='ok' else 1)"
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./frontend
+    image: insulation-diagnostic-web:latest
+    container_name: insulation-web
+    ports:
+      # 宿主机端口可通过环境变量 WEB_PORT 配置
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    restart: unless-stopped
+
+  # 一次性校验服务：pytest + 前端构建检查 + API 冒烟，结束后自行退出并以退出码报告结果。
+  # 运行：docker compose --profile verify run --rm verify
+  verify:
+    profiles: ["verify"]
+    build:
+      context: .
+      dockerfile: verify/Dockerfile
+    image: insulation-diagnostic-verify:latest
+    container_name: insulation-verify
+    depends_on:
+      backend:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    environment:
+      BACKEND_URL: http://backend:8000
+      WEB_URL: http://web
+    restart: "no"

@@ -1,0 +1,243 @@
+:root {
+  --bg: #0f1623;
+  --panel: #182336;
+  --panel-2: #1f2d44;
+  --line: #2c3d5a;
+  --text: #e6edf7;
+  --muted: #93a4bf;
+  --accent: #4ea1ff;
+  --good: #2ecc8f;
+  --bad: #ff6b6b;
+  --warn: #ffb84d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+}
+
+header h1 {
+  font-size: 24px;
+  margin: 0 0 6px;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.card h2 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+
+.card h3 {
+  font-size: 14px;
+  margin: 18px 0 8px;
+  color: var(--muted);
+}
+
+.actions { display: flex; gap: 8px; }
+
+button {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) { border-color: var(--accent); }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #08131f;
+  font-weight: 600;
+  padding: 9px 20px;
+  font-size: 14px;
+}
+
+.icon-btn {
+  padding: 0 7px;
+  line-height: 1;
+  font-size: 15px;
+}
+
+input, select {
+  background: #0e1828;
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 5px;
+  padding: 5px 8px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input.narrow { width: 80px; }
+input.bit {
+  width: 42px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.bad-input {
+  border-color: var(--bad) !important;
+  background: rgba(255, 107, 107, 0.12) !important;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 3px 6px 3px 12px;
+}
+
+.chip.bad { border-color: var(--bad); }
+.chip input {
+  width: 72px;
+  background: transparent;
+  border: none;
+  padding: 2px 0;
+}
+
+.grid {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+}
+
+.grid th, .grid td {
+  border: 1px solid var(--line);
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.grid th {
+  background: var(--panel-2);
+  color: var(--muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.mode-col { min-width: 54px; text-align: center; }
+.bit-cell { text-align: center; }
+
+.matrix-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.matrix-scroll .grid { border: none; }
+.matrix-scroll .grid th:first-child,
+.matrix-scroll .grid td:first-child { position: sticky; left: 0; background: var(--panel); z-index: 1; }
+.matrix-scroll .grid thead th:first-child { background: var(--panel-2); z-index: 2; }
+
+.bus-table { max-width: 560px; }
+
+.field-msg {
+  display: block;
+  color: var(--bad);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 10px 0 0;
+}
+
+.muted { color: var(--muted); }
+
+.submit-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.result { border-width: 2px; }
+
+.error-panel { border-color: var(--bad); }
+.error-panel ul { margin: 8px 0 0; padding-left: 20px; }
+.error-panel li { margin: 4px 0; font-size: 13px; }
+.loc {
+  background: #0e1828;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 12px;
+  color: var(--warn);
+}
+
+.no-plan { border-color: var(--warn); }
+.no-plan h2 { color: var(--warn); }
+
+.plan { border-color: var(--good); }
+.plan h2 { color: var(--good); }
+
+.summary {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin: 10px 0 4px;
+}
+
+.metric { display: flex; flex-direction: column; gap: 2px; }
+.metric-label { color: var(--muted); font-size: 12px; }
+.metric-value { font-size: 18px; font-weight: 700; }
+
+.evidence .bit-out {
+  text-align: center;
+  font-weight: 700;
+  color: var(--accent);
+}
