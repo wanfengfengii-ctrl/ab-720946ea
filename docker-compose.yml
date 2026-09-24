@@ -1,0 +1,51 @@
+name: sentinel-selector
+
+services:
+  backend:
+    build: ./backend
+    image: sentinel-backend
+    ports:
+      # 宿主机端口可通过 API_PORT 环境变量配置
+      - "${API_PORT:-8000}:8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/health', timeout=3).status == 200 else 1)"
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+  frontend:
+    build: ./frontend
+    image: sentinel-frontend
+    ports:
+      # 宿主机端口可通过 WEB_PORT 环境变量配置
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/healthz"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+  # 一次性校验服务：代码测试 + 构建检查 + API 冒烟，结束后自行退出
+  verify:
+    build:
+      context: .
+      dockerfile: verify/Dockerfile
+    image: sentinel-verify
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    environment:
+      API_BASE: http://backend:8000
+      WEB_BASE: http://frontend:80
+      VERIFY_WAIT_SECONDS: "90"
